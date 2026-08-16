@@ -1,9 +1,10 @@
 import Chai from "./Chai.jsx";
 
 function App() {
+  const language = "React Js";
   return (
     <>
-      <h1>Ruturaj Powar</h1>
+      <h1>Ruturaj Powar {language}</h1>
       <p>
         <Chai /> is ready
       </p>
