@@ -9,7 +9,6 @@ function InputBox({
   selectCurrency = "usd",
   amountDisable = false,
   currencyDisable = false,
-
   className = "",
 }) {
   const amountInputId = useId();
@@ -45,7 +44,7 @@ function InputBox({
         >
           {currencyOptions.map((currency) => (
             <option key={currency} value={currency}>
-              usd
+              {currency.toUpperCase()}
             </option>
           ))}
         </select>
