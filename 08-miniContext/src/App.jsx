@@ -1,5 +1,11 @@
+import UserContextProvider from "./context/UserContextProvider";
+
 function App() {
-  return <div>App</div>;
+  return (
+    <UserContextProvider>
+      <h1>react Context api</h1>
+    </UserContextProvider>
+  );
 }
 
 export default App;
