@@ -9,9 +9,11 @@ function App() {
       <div className="container">
         <h1>{count}</h1>
         <div className="btns">
-          <button>Increase</button>
-          <button>Reset</button>
-          <button>Decrease</button>
+          <button onClick={() => setCount(count + 1)}>Increase</button>
+          <button onClick={() => setCount(0)} disabled={count === 0}>
+            Reset
+          </button>
+          <button onClick={() => setCount(count - 1)}>Decrease</button>
         </div>
       </div>
     </div>
