@@ -1,122 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodo, deleteTodo, updateTodo } from "./features/todos/todoSlice";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [text, setText] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
+  const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
+
+  const handleAddTodo = (event) => {
+    event.preventDefault();
+    if (!text.trim()) return;
+    dispatch(addTodo(text));
+    setText("");
+  };
+
+  const handleUpdate = (event) => {
+    event.preventDefault();
+    if (!editText.trim()) return;
+    dispatch(updateTodo({ id: editingId, text: editText }));
+    setEditingId(null);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <main className="app">
+      <h1>Todo App</h1>
+      <form onSubmit={handleAddTodo} className="add-form">
+        <input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Enter a todo"
+        />
+        <button>Add</button>
+      </form>
+      <ul className="todo-list">
+        {todos.map((todo) => (
+          <li key={todo.id}>
+            {editingId === todo.id ? (
+              <form onSubmit={handleUpdate} className="edit-form">
+                <input
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  autoFocus
+                />
+                <button>Save</button>
+              </form>
+            ) : (
+              <>
+                <span>{todo.text}</span>
+                <div>
+                  <button
+                    onClick={() => {
+                      setEditingId(todo.id);
+                      setEditText(todo.text);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button onClick={() => dispatch(deleteTodo(todo.id))}>
+                    Delete
+                  </button>
+                </div>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
 }
 
-export default App
+export default App;
